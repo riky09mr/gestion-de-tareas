@@ -12,9 +12,30 @@ class TareaController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $tareas = Tarea::where('user_id', Auth::id())->orderBy('created_at', 'desc')->get();
+        $query = Tarea::where('user_id', Auth::id());
+
+        if ($request->has('buscar') && !empty($request->buscar)) {
+            $buscar = $request->buscar;
+            $query->where(function($q) use ($buscar) {
+                $q->where('titulo', 'like', "%{$buscar}%")
+                  ->orWhere('descripcion', 'like', "%{$buscar}%");
+            });
+        }
+
+        if ($request->has('estado') && !empty($request->estado)) {
+            $query->where('estado', $request->estado);
+        }
+
+        if ($request->has('fecha_vencimiento') && !empty($request->fecha_vencimiento)) {
+            $query->whereDate('fecha_vencimiento', $request->fecha_vencimiento);
+        }
+        if ($request->has('id') && !empty($request->id)) {
+            $query->where('id', $request->id);
+        }
+        $tareas = $query->orderBy('created_at', 'desc')->get();
+
         return view('tareas.index', compact('tareas'));
     }
 

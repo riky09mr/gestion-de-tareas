@@ -13,7 +13,7 @@ class Tarea extends Model
         return $this->belongsTo(User::class);
     }
 
-   const ESTADOS = [
+   public const ESTADOS = [
     'Pendiente' => 1,
     'En progreso' => 2,
     'Completada' => 3,

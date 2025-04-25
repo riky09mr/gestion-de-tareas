@@ -12,12 +12,39 @@
                     </a>
                 </div>
 
+                <!-- Formulario de búsqueda -->
+                <div class="card-body border-bottom">
+                    <form action="{{ route('tareas.index') }}" method="GET" class="row g-3">
+                        <div class="col-md-4">
+                            <input type="text" name="buscar" class="form-control" placeholder="Buscar por título o descripción" value="{{ request('buscar') }}">
+                        </div>
+                        <div class="col-md-3">
+                            <select name="estado" class="form-select">
+                                <option value="">Todos los estados</option>
+                                @foreach(App\Models\Tarea::ESTADOS as $nombre => $valor)
+                                    <option value="{{ $valor }}" {{ request('estado') == $valor ? 'selected' : '' }}>{{ $nombre }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div class="col-md-3">
+                            <input type="date" name="fecha_vencimiento" class="form-control" value="{{ request('fecha_vencimiento') }}">
+                        </div>
+                        <div class="col-md-3">
+                            <input type="text" name="id" class="form-control" placeholder="Buscar por Numero de tarea" value="{{ request('id') }}">
+                        </div>
+                        <div class="col-md-2">
+                            <button type="submit" class="btn btn-primary w-100">Filtrar</button>
+                        </div>
+                    </form>
+                </div>
+
                 <div class="card-body">
                     @if($tareas->count() > 0)
                         <div class="table-responsive">
                             <table class="table table-striped table-hover">
                                 <thead>
                                     <tr>
+                                        <th>Numero de tarea</th>
                                         <th>Título</th>
                                         <th>Estado</th>
                                         <th>Fecha límite</th>
@@ -27,6 +54,7 @@
                                 <tbody>
                                     @foreach($tareas as $tarea)
                                         <tr>
+                                            <td>{{ $tarea->id }}</td>
                                             <td>{{ $tarea->titulo }}</td>
                                             <td>
                                                 <span class="badge rounded-pill
